@@ -1,5 +1,6 @@
 import { useDispatch, useSelector } from "react-redux";
 import { voteAnecdote } from "../reducers/anecdoteReducer";
+import { removeNotif, setNotif } from "../reducers/notificationReducer";
 
 const Anecdote = ({ anecdote, handleVote }) => {
   return (
@@ -14,22 +15,36 @@ const Anecdote = ({ anecdote, handleVote }) => {
       <p>{anecdote.content}</p>
       <p>
         has {anecdote.votes}
-        <button onClick={() => handleVote(anecdote.id)}>vote</button>
+        <button
+          onClick={() =>
+            handleVote({ id: anecdote.id, name: anecdote.content })
+          }
+        >
+          vote
+        </button>
       </p>
     </div>
   );
 };
 
-const Anecdotes = () => {
-  const anecdotes = useSelector((state) => state);
+const AnecdoteList = () => {
+  const filter = useSelector((state) => state.filter);
+  const anecdotes = useSelector((state) =>
+    state.anecdotes.filter((a) => a.content.includes(filter))
+  );
   const dispatch = useDispatch();
 
-  const vote = (id) => {
+  const vote = ({ id, name }) => {
     dispatch(voteAnecdote(id));
+    const notif = `You voted  '${
+      name.length > 40 ? name.substring(0, 40) + "..." : name
+    }'`;
+    dispatch(setNotif(notif));
+    setTimeout(() => dispatch(removeNotif()), 3000);
   };
 
   const sortByVotes = (arr) => {
-    return arr.sort((a, b) => a.votes < b.votes);
+    return arr.map((a) => a).sort((a, b) => a.votes < b.votes);
   };
   return (
     <div>
@@ -49,4 +64,4 @@ const Anecdotes = () => {
   );
 };
 
-export default Anecdotes;
+export default AnecdoteList;

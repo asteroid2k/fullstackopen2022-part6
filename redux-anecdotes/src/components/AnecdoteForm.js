@@ -1,5 +1,6 @@
 import { useDispatch } from "react-redux";
 import { createAnecdote } from "../reducers/anecdoteReducer";
+import { removeNotif, setNotif } from "../reducers/notificationReducer";
 
 const NewAnecdote = () => {
   const dispatch = useDispatch();
@@ -8,6 +9,10 @@ const NewAnecdote = () => {
     e.preventDefault();
     const content = e.target.anecdote.value;
     dispatch(createAnecdote(content));
+    dispatch(setNotif("Anecdote added"));
+    setTimeout(() => dispatch(removeNotif()), 3000);
+
+    e.target.anecdote.value = "";
   };
 
   return (
