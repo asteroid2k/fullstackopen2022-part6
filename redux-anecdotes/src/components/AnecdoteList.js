@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from "react-redux";
 import { voteAnecdote } from "../reducers/anecdoteReducer";
-import { removeNotif, setNotif } from "../reducers/notificationReducer";
+import { setNotification } from "../reducers/notificationReducer";
 
 const Anecdote = ({ anecdote, handleVote }) => {
   return (
@@ -39,8 +39,7 @@ const AnecdoteList = () => {
     const notif = `You voted  '${
       name.length > 40 ? name.substring(0, 40) + "..." : name
     }'`;
-    dispatch(setNotif(notif));
-    setTimeout(() => dispatch(removeNotif()), 3000);
+    dispatch(setNotification(notif, 5));
   };
 
   const sortByVotes = (arr) => {
